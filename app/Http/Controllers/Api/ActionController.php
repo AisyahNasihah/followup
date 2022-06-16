@@ -35,15 +35,18 @@ class ActionController extends Controller
 
         $action = DB::transaction(function () use ($request) {
             $action = Action::create([
-                'type' => $request->type,
-                'medium' => $request->medium,
-                'content' => $request->content
+                'comment' => $request->comment,
+                'when' => $request->when,
+                'time' => $request->time,
+                'type_id' => $request->type,
+                'course_id' => $request->course,
+                'client_id' => $request->client,
             ]);
             
             return $action;
         });
 
-        $action = Action::whereId($action->id)->first();
+        $action = Action::with('type', 'course')->whereId($action->id)->first();
         return new ActionResource($action);
     }
 
@@ -67,10 +70,16 @@ class ActionController extends Controller
      */
     public function update(ActionRequest $request, Action $action)
     {
-        $data = $request->all();
-        $action->update($data);
-        $action->save();
+        $action->update([
+            'comment' => $request->comment,
+            'when' => $request->when,
+            'time' => $request->time,
+            'type_id' => $request->type,
+            'course_id' => $request->course,
+            'client_id' => $request->client,
+        ]);
 
+        $action = Action::with('type', 'course')->whereId($action->id)->first();
         return new ActionResource($action);
     }
 

@@ -19,7 +19,7 @@ class ClientController extends Controller
      */
     public function index()
     {
-        //
+        return CategoryResource::collection(Category::get());
     }
 
     /**
@@ -39,17 +39,23 @@ class ClientController extends Controller
                 'name' => $request->category,
             ]);
 
-            $client = Client::create([
-                'company' => $request->company,
-                'name' => $request->name,
-                'phone_number' => $request->phone_number,
-                'email' => $request->email,
-                'category_id' => $category->id,
-            ]);
+            $client = Client::updateOrCreate(
+                [
+                    'phone_number' => $request->phone_number,
+                    'email' => $request->email,
+                ],
+                [
+                    'company' => $request->company,
+                    'name' => $request->name,
+                    'active' => 1,
+                    'category_id' => $category->id,
+                    'user_id' => $request->user
+                ]
+            );
 
             return $client;
         });
-        $client = Client::with('category')->whereId($client->id)->first();
+        $client = Client::with('category', 'user')->whereId($client->id)->first();
         return new ClientResource($client);
     }
 
@@ -82,10 +88,11 @@ class ClientController extends Controller
             'name' => $request->name,
             'phone_number' => $request->phone_number,
             'email' => $request->email,
-            'category_id' => $category->id
+            'category_id' => $category->id,
+            'user_id' => $request->user
         ]);
 
-        $client = Client::with('category')->whereId($client->id)->first();
+        $client = Client::with('category', 'user')->whereId($client->id)->first();
         return new ClientResource($client);
     }
 

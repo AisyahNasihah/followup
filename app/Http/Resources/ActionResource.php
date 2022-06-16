@@ -14,11 +14,15 @@ class ActionResource extends JsonResource
      */
     public function toArray($request)
     {
+        $type = $this->whenLoaded(relationship: 'type');
+        $course = $this->whenLoaded(relationship: 'course');
         return [
             'id' => $this->id,
-            'type' => $this->type,
-            'medium' => $this->medium,
-            'content' => $this->content,
+            'comment' => $this->comment,
+            'when' => $this->when,
+            'time' => $this->time,
+            'type' => new TypeResource($type),
+            'course' => new CourseResource($course),
             'active' => $this->active,
         ];
     }
