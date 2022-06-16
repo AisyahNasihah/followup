@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\ActionController;
+use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\ClientController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +21,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::apiResource('action', ActionController::class)->only(['store', 'update', 'destroy']);
+Route::apiResource('client', ClientController::class)->only(['store', 'update', 'destroy']);
+Route::apiResource('category', CategoryController::class)->only(['index']);
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
     // Route::apiResource('action', ActionController::class)->only(['store']);

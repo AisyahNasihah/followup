@@ -42,6 +42,8 @@ class ActionController extends Controller
             
             return $action;
         });
+
+        $action = Action::whereId($action->id)->first();
         return new ActionResource($action);
     }
 
