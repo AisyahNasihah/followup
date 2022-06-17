@@ -29,9 +29,9 @@ class ActionController extends Controller
      */
     public function store(ActionRequest $request)
     {
-        // if (auth()->user() == null) {
-        //     return response()->json('User not authenticated', 200);
-        // }
+        if (auth()->user() == null) {
+            return response()->json('User not authenticated', 200);
+        }
 
         $action = DB::transaction(function () use ($request) {
             $action = Action::create([
@@ -70,6 +70,10 @@ class ActionController extends Controller
      */
     public function update(ActionRequest $request, Action $action)
     {
+        if (auth()->user() == null) {
+            return response()->json('User not authenticated', 200);
+        }
+        
         $action->update([
             'comment' => $request->comment,
             'when' => $request->when,

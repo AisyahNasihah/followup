@@ -5,6 +5,8 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ClientController;
 use App\Http\Controllers\Api\CourseController;
 use App\Http\Controllers\Api\TypeController;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\RegisterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,12 +24,15 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::apiResource('action', ActionController::class)->only(['store', 'update', 'destroy']);
-Route::apiResource('client', ClientController::class)->only(['store', 'update', 'destroy']);
-Route::apiResource('category', CategoryController::class)->only(['index']);
-Route::apiResource('course', CourseController::class)->only(['index']);
-Route::apiResource('type', TypeController::class)->only(['index']);
+
+Route::post('login', [AuthController::class, 'login']);
+Route::post('logout', [AuthController::class, 'logout']);
+Route::post('register', [RegisterController::class, 'register']);
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
-    // Route::apiResource('action', ActionController::class)->only(['store']);
+    Route::apiResource('action', ActionController::class)->only(['store', 'update', 'destroy']);
+    Route::apiResource('client', ClientController::class)->only(['store', 'update', 'destroy']);
+    Route::apiResource('category', CategoryController::class)->only(['index']);
+    Route::apiResource('course', CourseController::class)->only(['index']);
+    Route::apiResource('type', TypeController::class)->only(['index']);
 });

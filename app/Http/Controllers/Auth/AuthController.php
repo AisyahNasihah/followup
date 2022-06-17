@@ -4,13 +4,12 @@ namespace App\Http\Controllers\Auth;
 
 use App\Models\User;
 use App\Http\Controllers\Controller;
-use Carbon\Carbon;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-use Twilio\Rest\Client;
 
 class AuthController extends Controller
 {
@@ -35,12 +34,12 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'Bearer',
-            'name' => $user->name,
+            'name' => new UserResource($user),
         ], 200);
     }
 
     public function logout()
-    {  
+    {
         Auth::user()->tokens->each(function ($token, $key) {
             $token->delete();
         });

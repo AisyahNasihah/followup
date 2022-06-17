@@ -30,9 +30,9 @@ class ClientController extends Controller
      */
     public function store(ClientRequest $request)
     {
-        // if (auth()->user() == null) {
-        //     return response()->json('User not authenticated', 200);
-        // }
+        if (auth()->user() == null) {
+            return response()->json('User not authenticated', 200);
+        }
 
         $client = DB::transaction(function () use ($request) {
             $category = Category::updateOrCreate([
@@ -79,6 +79,10 @@ class ClientController extends Controller
      */
     public function update(ClientRequest $request, Client $client)
     {
+        if (auth()->user() == null) {
+            return response()->json('User not authenticated', 200);
+        }
+        
         $category = Category::updateOrCreate([
             'name' => $request->category
         ]);
