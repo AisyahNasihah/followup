@@ -26,13 +26,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('login', [AuthController::class, 'login']);
-Route::post('logout', [AuthController::class, 'logout']);
+
 Route::post('register', [RegisterController::class, 'register']);
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
-    Route::apiResource('action', ActionController::class)->only(['store', 'update', 'destroy']);
-    Route::apiResource('client', ClientController::class)->only(['store', 'update', 'destroy']);
+    Route::apiResource('action', ActionController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
+    Route::apiResource('client', ClientController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
     Route::apiResource('category', CategoryController::class)->only(['index']);
     Route::apiResource('course', CourseController::class)->only(['index']);
     Route::apiResource('type', TypeController::class)->only(['index']);
+    Route::post('logout', [AuthController::class, 'logout']);
 });

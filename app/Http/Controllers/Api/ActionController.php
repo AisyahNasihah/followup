@@ -16,9 +16,20 @@ class ActionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        if (auth()->user() == null) {
+            return response()->json('User not authenticated', 200);
+        }
+
+        $action = Action::with('type', 'course')->where('active', 1)->where(function ($query) use ($request) {
+            if (isset($request->when)) {
+
+                $query->where('when', '=', $request->when);
+            }
+        })->get();
+
+        return ActionResource::collection($action);
     }
 
     /**
@@ -42,7 +53,7 @@ class ActionController extends Controller
                 'course_id' => $request->course,
                 'client_id' => $request->client,
             ]);
-            
+
             return $action;
         });
 
@@ -56,9 +67,14 @@ class ActionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($client_id)
     {
-        //
+        if (auth()->user() == null) {
+            return response()->json('User not authenticated', 200);
+        }
+
+        $action = Action::with('type', 'course')->where('client_id', $client_id)->where('active', 1)->paginate(perPage: request('per_page'), page: request('page'));
+        return ActionResource::collection($action);
     }
 
     /**
@@ -73,7 +89,7 @@ class ActionController extends Controller
         if (auth()->user() == null) {
             return response()->json('User not authenticated', 200);
         }
-        
+
         $action->update([
             'comment' => $request->comment,
             'when' => $request->when,

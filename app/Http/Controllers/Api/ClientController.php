@@ -19,7 +19,12 @@ class ClientController extends Controller
      */
     public function index()
     {
-        return CategoryResource::collection(Category::get());
+        if (auth()->user() == null) {
+            return response()->json('User not authenticated', 200);
+        }
+
+        $client = Client::with('category')->where('user_id', auth()->user()->id)->where('active', 1)->paginate(perPage: request('per_page'), page: request('page'));
+        return ClientResource::collection($client);
     }
 
     /**
@@ -67,7 +72,12 @@ class ClientController extends Controller
      */
     public function show($id)
     {
-        //
+        if (auth()->user() == null) {
+            return response()->json('User not authenticated', 200);
+        }
+
+        $client = Client::with('category')->whereId($id)->get();
+        return ClientResource::collection($client);
     }
 
     /**
@@ -82,7 +92,7 @@ class ClientController extends Controller
         if (auth()->user() == null) {
             return response()->json('User not authenticated', 200);
         }
-        
+
         $category = Category::updateOrCreate([
             'name' => $request->category
         ]);
