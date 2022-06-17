@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\TypeController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\SearchController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -37,4 +38,5 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::apiResource('type', TypeController::class)->only(['index']);
     Route::apiResource('user', UserController::class)->only(['index', 'update']);
     Route::post('logout', [AuthController::class, 'logout']);
+    Route::post('search', [SearchController::class, 'search']);
 });
