@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ClientController;
 use App\Http\Controllers\Api\CourseController;
 use App\Http\Controllers\Api\TypeController;
+use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\RegisterController;
 use Illuminate\Http\Request;
@@ -26,7 +27,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('login', [AuthController::class, 'login']);
-
 Route::post('register', [RegisterController::class, 'register']);
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
@@ -35,5 +35,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::apiResource('category', CategoryController::class)->only(['index']);
     Route::apiResource('course', CourseController::class)->only(['index']);
     Route::apiResource('type', TypeController::class)->only(['index']);
+    Route::apiResource('user', UserController::class)->only(['index', 'update']);
     Route::post('logout', [AuthController::class, 'logout']);
 });
