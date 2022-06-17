@@ -29,6 +29,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [RegisterController::class, 'register']);
+Route::post('forgot-password', [AuthController::class, 'forgotPassword'])->middleware('guest')->name('password.email');
+Route::post('reset-password', [AuthController::class, 'reset'])->middleware('guest')->name('password.update');
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::apiResource('action', ActionController::class)->only(['index', 'show', 'store', 'update', 'destroy']);
